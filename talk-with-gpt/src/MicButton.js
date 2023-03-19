@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import MicIcon from '@mui/icons-material/Mic';
+import StopIcon from '@mui/icons-material/Stop';
 import Button from '@mui/material/Button';
 
 export default function MicButton() {
@@ -15,8 +16,10 @@ export default function MicButton() {
         } else {
             if (recording) {
                 mediaRecorder.stop();
+                console.log('stopped recording');
             } else {
                 mediaRecorder.start();
+                console.log('started recording');
             }
             setRecording(!recording);
         }
@@ -31,6 +34,7 @@ export default function MicButton() {
             mediaRecorder.onstop = () => {
                 const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
                 setAudioChunks([]);
+                console.log(audioBlob);
                 // Process the audioBlob further, e.g., save it, send it to a server, etc.
             };
         }
@@ -43,16 +47,20 @@ export default function MicButton() {
                 width: '100px',
                 height: '100px',
                 borderRadius: '50%',
-                bgcolor: 'red',
+                bgcolor: recording ? 'green' : 'red',
                 color: 'white',
                 ":hover": {
-                    bgcolor: 'red',
+                    bgcolor: recording ? 'green' : 'red',
                     opacity: 0.6,
                 },
             }}
             onClick={handleClick}
         >
-            <MicIcon sx={{ fontSize: 50 }} />
+            {recording ? (
+                <StopIcon sx={{ fontSize: 50 }} />
+            ) : (
+                <MicIcon sx={{ fontSize: 50 }} />
+            )}
         </Button>
     );
 }
