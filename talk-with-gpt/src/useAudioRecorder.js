@@ -1,35 +1,40 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 export default function useAudioRecorder() {
     const [isRecording, setIsRecording] = useState(false);
-    const [mediaRecorder, setMediaRecorder] = useState(null);
-    const [audioChunks, setAudioChunks] = useState([]);
     const [audioUrl, setAudioUrl] = useState(null);
-    const [recordingStopped, setRecordingStopped] = useState(false);
+    const mediaRecorderRef = useRef(null);
+    const audioChunksRef = useRef([]);
 
     const handleDataAvailable = useCallback((e) => {
-        console.log("handleDataAvailable", e.data);
-        setAudioChunks((prevChunks) => [...prevChunks, e.data]);
+        audioChunksRef.current.push(e.data);
+    }, []);
+
+    const handleStop = useCallback(() => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/ogg; codecs=opus' });
+        audioChunksRef.current = [];
+        const url = URL.createObjectURL(audioBlob);
+        setAudioUrl(url);
     }, []);
 
     const startRecording = useCallback(async () => {
-        if (!mediaRecorder) {
+        if (!mediaRecorderRef.current) {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             const options = { mimeType: 'audio/ogg; codecs=opus' };
-            const newMediaRecorder = new MediaRecorder(stream, options);
-            setMediaRecorder(newMediaRecorder);
-            newMediaRecorder.start();
-            console.log('started recording');
+            mediaRecorderRef.current = new MediaRecorder(stream, options);
+            mediaRecorderRef.current.ondataavailable = handleDataAvailable;
+            mediaRecorderRef.current.onstop = handleStop;
         }
-    }, [mediaRecorder]);
+        mediaRecorderRef.current.start();
+        setIsRecording(true);
+    }, [handleDataAvailable, handleStop]);
 
     const stopRecording = useCallback(() => {
-        if (mediaRecorder) {
-            mediaRecorder.stop();
-            console.log('stopped recording');
-            setRecordingStopped(true);
+        if (mediaRecorderRef.current) {
+            mediaRecorderRef.current.stop();
         }
-    }, [mediaRecorder]);
+        setIsRecording(false);
+    }, []);
 
     const toggleRecording = useCallback(() => {
         if (isRecording) {
@@ -37,26 +42,7 @@ export default function useAudioRecorder() {
         } else {
             startRecording();
         }
-        setIsRecording(!isRecording);
     }, [isRecording, startRecording, stopRecording]);
-
-    useEffect(() => {
-        if (mediaRecorder) {
-            mediaRecorder.ondataavailable = handleDataAvailable;
-        }
-    }, [mediaRecorder, handleDataAvailable]);
-
-    useEffect(() => {
-        if (recordingStopped && audioChunks.length > 0) {
-            const audioBlob = new Blob(audioChunks, { type: 'audio/ogg; codecs=opus' });
-            setAudioChunks([]);
-            const url = URL.createObjectURL(audioBlob);
-            setAudioUrl(url);
-            console.log(audioBlob);
-            setRecordingStopped(false);
-            setMediaRecorder(null);
-        }
-    }, [recordingStopped, audioChunks]);
 
     return { isRecording, toggleRecording, audioUrl };
 }
