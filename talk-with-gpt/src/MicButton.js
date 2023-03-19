@@ -8,35 +8,48 @@ export default function MicButton() {
     const [mediaRecorder, setMediaRecorder] = useState(null);
     const [audioChunks, setAudioChunks] = useState([]);
 
+    const handleDataAvailable = (e) => {
+        setAudioChunks((prevChunks) => [...prevChunks, e.data]);
+    };
+
+    const handleStop = () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        setAudioChunks([]);
+        console.log(audioBlob);
+        // Process the audioBlob further, e.g., save it, send it to a server, etc.
+    };
+
+    const startRecording = () => {
+        mediaRecorder.start();
+        console.log('started recording');
+    };
+
+    const stopRecording = () => {
+        mediaRecorder.stop();
+        console.log('stopped recording');
+    };
+
     const handleClick = async () => {
         if (!mediaRecorder) {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             const newMediaRecorder = new MediaRecorder(stream);
+            newMediaRecorder.ondataavailable = handleDataAvailable;
+            newMediaRecorder.onstop = handleStop;
             setMediaRecorder(newMediaRecorder);
+            setRecording(true);
         } else {
             if (recording) {
-                mediaRecorder.stop();
-                console.log('stopped recording');
+                stopRecording();
             } else {
-                mediaRecorder.start();
-                console.log('started recording');
+                startRecording();
             }
             setRecording(!recording);
         }
     };
 
     useEffect(() => {
-        if (mediaRecorder) {
-            mediaRecorder.ondataavailable = (e) => {
-                setAudioChunks((prevChunks) => [...prevChunks, e.data]);
-            };
-
-            mediaRecorder.onstop = () => {
-                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                setAudioChunks([]);
-                console.log(audioBlob);
-                // Process the audioBlob further, e.g., save it, send it to a server, etc.
-            };
+        if (mediaRecorder && recording) {
+            startRecording();
         }
     }, [mediaRecorder]);
 
