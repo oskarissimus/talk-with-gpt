@@ -6,15 +6,15 @@ import { micButtonStyles } from './styles';
 import useAudioRecorder from './useAudioRecorder';
 
 export default function MicButton() {
-    const { recording, handleClick } = useAudioRecorder();
+    const { isRecording, toggleRecording } = useAudioRecorder();
 
     return (
         <Button
             variant="contained"
-            sx={micButtonStyles(recording)}
-            onClick={handleClick}
+            sx={micButtonStyles(isRecording)}
+            onClick={toggleRecording}
         >
-            {recording ? (
+            {isRecording ? (
                 <StopIcon sx={{ fontSize: 50 }} />
             ) : (
                 <MicIcon sx={{ fontSize: 50 }} />

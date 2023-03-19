@@ -1,54 +1,49 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export default function useAudioRecorder() {
-    const [recording, setRecording] = useState(false);
+    const [isRecording, setIsRecording] = useState(false);
     const [mediaRecorder, setMediaRecorder] = useState(null);
     const [audioChunks, setAudioChunks] = useState([]);
 
-    const handleDataAvailable = (e) => {
+    const handleDataAvailable = useCallback((e) => {
         setAudioChunks((prevChunks) => [...prevChunks, e.data]);
-    };
+    }, []);
 
-    const handleStop = () => {
+    const handleStop = useCallback(() => {
         const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
         setAudioChunks([]);
         console.log(audioBlob);
         // Process the audioBlob further, e.g., save it, send it to a server, etc.
-    };
+    }, [audioChunks]);
 
-    const startRecording = () => {
-        mediaRecorder.start();
-        console.log('started recording');
-    };
-
-    const stopRecording = () => {
-        mediaRecorder.stop();
-        console.log('stopped recording');
-    };
-
-    const handleClick = async () => {
+    const startRecording = useCallback(async () => {
         if (!mediaRecorder) {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             const newMediaRecorder = new MediaRecorder(stream);
             newMediaRecorder.ondataavailable = handleDataAvailable;
             newMediaRecorder.onstop = handleStop;
             setMediaRecorder(newMediaRecorder);
-            setRecording(true);
-        } else {
-            if (recording) {
-                stopRecording();
-            } else {
-                startRecording();
-            }
-            setRecording(!recording);
+            newMediaRecorder.start();
+            console.log('started recording');
         }
-    };
+    }, [mediaRecorder, handleDataAvailable, handleStop]);
 
-    useEffect(() => {
-        if (mediaRecorder && recording) {
-            startRecording();
+    const stopRecording = useCallback(() => {
+        if (mediaRecorder) {
+            mediaRecorder.stop();
+            console.log('stopped recording');
+            setMediaRecorder(null);
         }
     }, [mediaRecorder]);
 
-    return { recording, handleClick };
+    const toggleRecording = useCallback(() => {
+        if (isRecording) {
+            stopRecording();
+        } else {
+            startRecording();
+        }
+        setIsRecording(!isRecording);
+    }, [isRecording, startRecording, stopRecording]);
+
+    return { isRecording, toggleRecording };
 }
