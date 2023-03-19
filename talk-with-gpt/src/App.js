@@ -2,7 +2,7 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { Stack } from '@mui/system';
-import MicButton from './MicButton';
+import Recorder from './Recorder';
 
 export default function App() {
   // there is centered Box styled with sx with a p tag and a MicIcon
@@ -28,7 +28,7 @@ export default function App() {
         <Typography variant="h4" component="p">
           Talk with GPT
         </Typography>
-        <MicButton />
+        <Recorder />
       </Stack>
 
     </Box >

@@ -9,3 +9,15 @@ export const micButtonStyles = (isRecording) => ({
         opacity: 0.6,
     },
 });
+
+export const playButtonStyles = {
+    width: '100px',
+    height: '100px',
+    borderRadius: '50%',
+    bgcolor: 'blue',
+    color: 'white',
+    ":hover": {
+        bgcolor: 'blue',
+        opacity: 0.6,
+    },
+};
