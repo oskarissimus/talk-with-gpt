@@ -1,35 +1,34 @@
-export const micButtonStyles = (isRecording) => ({
+const commonButtonStyles = {
     width: '100px',
     height: '100px',
     borderRadius: '50%',
-    bgcolor: isRecording ? 'green' : 'red',
     color: 'white',
     ":hover": {
-        bgcolor: isRecording ? 'green' : 'red',
         opacity: 0.6,
+    },
+};
+
+
+function makeButtonStyles(color) {
+    return {
+        ...commonButtonStyles,
+        bgcolor: color,
+        ":hover": {
+            ...commonButtonStyles[":hover"],
+            bgcolor: color,
+        },
+    };
+}
+
+export const micButtonStyles = (isRecording) => ({
+    ...commonButtonStyles,
+    bgcolor: isRecording ? 'green' : 'red',
+    ":hover": {
+        ...commonButtonStyles[":hover"],
+        bgcolor: isRecording ? 'green' : 'red',
     },
 });
 
-export const playButtonStyles = {
-    width: '100px',
-    height: '100px',
-    borderRadius: '50%',
-    bgcolor: 'blue',
-    color: 'white',
-    ":hover": {
-        bgcolor: 'blue',
-        opacity: 0.6,
-    },
-};
-
-export const transcriptButtonStyles = {
-    width: '100px',
-    height: '100px',
-    borderRadius: '50%',
-    bgcolor: 'orange',
-    color: 'white',
-    ":hover": {
-        bgcolor: 'orange',
-        opacity: 0.6,
-    },
-};
+export const playButtonStyles = makeButtonStyles('blue');
+export const transcriptButtonStyles = makeButtonStyles('orange');
+export const askButtonStyles = makeButtonStyles('purple');

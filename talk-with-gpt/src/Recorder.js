@@ -5,10 +5,12 @@ import PlayButton from './PlayButton';
 import useAudioRecorder from './useAudioRecorder';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
+import AskButton from './AskButton';
 
 export default function Recorder() {
     const { isRecording, toggleRecording, audioUrl } = useAudioRecorder();
     const [transcriptedText, setTranscriptedText] = React.useState('');
+    const [answer, setAnswer] = React.useState('');
 
     return (
         <Grid
@@ -16,21 +18,34 @@ export default function Recorder() {
             spacing={2}
             justifyContent="space-around"
         >
-            <Grid item>
+            <Grid item xs={6}>
                 <MicButton isRecording={isRecording} toggleRecording={toggleRecording} />
             </Grid>
-            <Grid item>
+            <Grid item xs={6}>
                 <PlayButton audioUrl={audioUrl} />
             </Grid>
-            <Grid item>
+            <Grid item xs={2}>
                 <TranscriptButton audioUrl={audioUrl} setTranscriptedText={setTranscriptedText} />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={10}>
                 <TextField
                     multiline
                     rows={4}
                     value={transcriptedText}
                     label="Transcripted Text"
+                    variant="outlined"
+                    fullWidth
+                />
+            </Grid>
+            <Grid item xs={2}>
+                <AskButton transcriptedText={transcriptedText} setAnswer={setAnswer} />
+            </Grid>
+            <Grid item xs={10}>
+                <TextField
+                    multiline
+                    rows={4}
+                    value={answer}
+                    label="Answer"
                     variant="outlined"
                     fullWidth
                 />
