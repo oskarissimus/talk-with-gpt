@@ -11,7 +11,7 @@ export default function useAudioRecorder() {
     }, []);
 
     const handleStop = useCallback(() => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/ogg; codecs=opus' });
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
         audioChunksRef.current = [];
         const url = URL.createObjectURL(audioBlob);
         setAudioUrl(url);
@@ -20,7 +20,7 @@ export default function useAudioRecorder() {
     const startRecording = useCallback(async () => {
         if (!mediaRecorderRef.current) {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            const options = { mimeType: 'audio/ogg; codecs=opus' };
+            const options = { mimeType: 'audio/webm' };
             mediaRecorderRef.current = new MediaRecorder(stream, options);
             mediaRecorderRef.current.ondataavailable = handleDataAvailable;
             mediaRecorderRef.current.onstop = handleStop;

@@ -1,17 +1,26 @@
 import React from 'react';
 import MicButton from './MicButton';
-import useAudioRecorder from './useAudioRecorder';
+import TranscriptButton from './TranscriptButton';
 import PlayButton from './PlayButton';
-import { Stack } from '@mui/system';
+import useAudioRecorder from './useAudioRecorder';
+import Grid from '@mui/material/Grid';
 
 export default function Recorder() {
     const { isRecording, toggleRecording, audioUrl } = useAudioRecorder();
 
     return (
-        <Stack spacing={2} direction="row">
-            <MicButton isRecording={isRecording} toggleRecording={toggleRecording} />
-            <PlayButton audioUrl={audioUrl} />
-        </Stack>
+        <Grid container spacing={2} justifyContent="center">
+            <Grid item>
+                <MicButton isRecording={isRecording} toggleRecording={toggleRecording} />
+            </Grid>
+            <Grid item>
+                <PlayButton audioUrl={audioUrl} />
+            </Grid>
+            <Grid item>
+                <TranscriptButton audioUrl={audioUrl} />
+            </Grid>
+        </Grid>
+
     );
 }
 

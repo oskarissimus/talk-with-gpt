@@ -21,3 +21,15 @@ export const playButtonStyles = {
         opacity: 0.6,
     },
 };
+
+export const transcriptButtonStyles = {
+    width: '100px',
+    height: '100px',
+    borderRadius: '50%',
+    bgcolor: 'orange',
+    color: 'white',
+    ":hover": {
+        bgcolor: 'orange',
+        opacity: 0.6,
+    },
+};
