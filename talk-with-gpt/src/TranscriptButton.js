@@ -1,10 +1,12 @@
 import React from 'react';
 import TranscribeIcon from '@mui/icons-material/Transcribe';
 import Button from '@mui/material/Button';
+import LinearProgress from '@mui/material/LinearProgress';
 import { transcriptButtonStyles } from './styles';
 
-export default function TranscriptButton({ audioUrl, setTranscriptedText }) {
+export default function TranscriptButton({ audioUrl, setTranscriptedText, setIsTranscribing }) {
     const handleClick = async () => {
+        setIsTranscribing(true);
         try {
             const response = await fetch(audioUrl);
             const audioBlob = await response.blob();
@@ -20,6 +22,7 @@ export default function TranscriptButton({ audioUrl, setTranscriptedText }) {
                 const data = await transcribeResponse.json();
                 console.log('transcripted text:', data);
                 setTranscriptedText(data);
+                setIsTranscribing(false);
             } else {
                 console.error('Error transcribing audio:', transcribeResponse.statusText);
             }

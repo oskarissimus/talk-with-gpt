@@ -6,11 +6,14 @@ import useAudioRecorder from './useAudioRecorder';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import AskButton from './AskButton';
+import LinearProgress from '@mui/material/LinearProgress';
 
 export default function Recorder() {
     const { isRecording, toggleRecording, audioUrl } = useAudioRecorder();
     const [transcriptedText, setTranscriptedText] = React.useState('');
     const [answer, setAnswer] = React.useState('');
+    const [isTranscribing, setIsTranscribing] = React.useState(false);
+    const [isAsking, setIsAsking] = React.useState(false);
 
     return (
         <Grid
@@ -25,7 +28,7 @@ export default function Recorder() {
                 <PlayButton audioUrl={audioUrl} />
             </Grid>
             <Grid item xs={2}>
-                <TranscriptButton audioUrl={audioUrl} setTranscriptedText={setTranscriptedText} />
+                <TranscriptButton audioUrl={audioUrl} setTranscriptedText={setTranscriptedText} setIsTranscribing={setIsTranscribing} />
             </Grid>
             <Grid item xs={10}>
                 <TextField
@@ -36,9 +39,10 @@ export default function Recorder() {
                     variant="outlined"
                     fullWidth
                 />
+                {isTranscribing && <LinearProgress />}
             </Grid>
             <Grid item xs={2}>
-                <AskButton transcriptedText={transcriptedText} setAnswer={setAnswer} />
+                <AskButton transcriptedText={transcriptedText} setAnswer={setAnswer} setIsAsking={setIsAsking} />
             </Grid>
             <Grid item xs={10}>
                 <TextField
@@ -49,6 +53,7 @@ export default function Recorder() {
                     variant="outlined"
                     fullWidth
                 />
+                {isAsking && <LinearProgress />}
             </Grid>
         </Grid >
 

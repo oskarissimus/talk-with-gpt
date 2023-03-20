@@ -3,9 +3,10 @@ import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import Button from '@mui/material/Button';
 import { askButtonStyles } from './styles';
 
-export default function AskButton({ transcriptedText, setAnswer }) {
+export default function AskButton({ transcriptedText, setAnswer, setIsAsking }) {
     const handleClick = async () => {
         console.log('asking question: ', transcriptedText);
+        setIsAsking(true);
 
         try {
             console.log('asking question: ', transcriptedText);
@@ -21,6 +22,7 @@ export default function AskButton({ transcriptedText, setAnswer }) {
                 const data = await response.json();
                 console.log('answer:', data);
                 setAnswer(data);
+                setIsAsking(false);
             } else {
                 console.error('Error getting answer:', response.statusText);
             }
