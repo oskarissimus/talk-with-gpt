@@ -3,11 +3,10 @@ import TranscribeIcon from '@mui/icons-material/Transcribe';
 import Button from '@mui/material/Button';
 import { transcriptButtonStyles } from './styles';
 
-export default function TranscriptButton({ audioUrl }) {
+export default function TranscriptButton({ audioUrl, setTranscriptedText }) {
     const handleClick = async () => {
         try {
             const response = await fetch(audioUrl);
-            console.log("response", response)
             const audioBlob = await response.blob();
             const formData = new FormData();
             formData.append('file', new File([audioBlob], 'audio.webm', { type: 'audio/webm' }));
@@ -19,8 +18,8 @@ export default function TranscriptButton({ audioUrl }) {
 
             if (transcribeResponse.ok) {
                 const data = await transcribeResponse.json();
-                console.log('sending audio to openai api');
-                console.log('transcripted text:', data.text);
+                console.log('transcripted text:', data);
+                setTranscriptedText(data);
             } else {
                 console.error('Error transcribing audio:', transcribeResponse.statusText);
             }

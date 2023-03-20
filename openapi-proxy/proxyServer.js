@@ -31,11 +31,9 @@ app.post('/transcribe', upload.single('file'), async (req, res) => {
         // delete file
         fs.unlink(fileName, (err) => {
             if (err) throw err;
-            console.log('file was deleted');
         });
         fs.unlink(req.file.path, (err) => {
             if (err) throw err;
-            console.log('file was deleted');
         });
         res.json(resp.data.text);
 
