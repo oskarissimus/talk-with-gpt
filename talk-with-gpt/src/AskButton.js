@@ -5,7 +5,10 @@ import { askButtonStyles } from './styles';
 
 export default function AskButton({ transcriptedText, setAnswer }) {
     const handleClick = async () => {
+        console.log('asking question: ', transcriptedText);
+
         try {
+            console.log('asking question: ', transcriptedText);
             const response = await fetch('/answer', {
                 method: 'POST',
                 headers: {
