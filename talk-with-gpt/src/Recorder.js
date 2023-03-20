@@ -7,6 +7,7 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import AskButton from './AskButton';
 import LinearProgress from '@mui/material/LinearProgress';
+import SayAnswerButton from './SayAnswerButton';
 
 export default function Recorder() {
     const { isRecording, toggleRecording, audioUrl } = useAudioRecorder();
@@ -44,7 +45,7 @@ export default function Recorder() {
             <Grid item xs={2}>
                 <AskButton transcriptedText={transcriptedText} setAnswer={setAnswer} setIsAsking={setIsAsking} />
             </Grid>
-            <Grid item xs={10}>
+            <Grid item xs={8}>
                 <TextField
                     multiline
                     rows={4}
@@ -55,6 +56,10 @@ export default function Recorder() {
                 />
                 {isAsking && <LinearProgress />}
             </Grid>
+            <Grid item xs={2}>
+                <SayAnswerButton answer={answer} />
+            </Grid>
+
         </Grid >
 
     );

@@ -4,6 +4,11 @@ const multer = require('multer');
 const fs = require('fs');
 require('dotenv').config();
 const { Configuration, OpenAIApi } = require("openai");
+const textToSpeech = require('@google-cloud/text-to-speech');
+const client = new textToSpeech.TextToSpeechClient();
+
+
+
 const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
 });
@@ -62,6 +67,26 @@ app.post('/answer', async (req, res) => {
 
         console.log(trimmedAnswer);
         res.json(trimmedAnswer)
+    } catch (error) {
+        console.error(error.message);
+        console.error(error.stack);
+
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+app.post('/text-to-speech', async (req, res) => {
+    try {
+        const { text } = req.body;
+        const request = {
+            input: { text: text },
+            voice: { languageCode: 'pl-PL', ssmlGender: 'NEUTRAL' },
+            audioConfig: { audioEncoding: 'MP3' },
+        };
+
+        const [response] = await client.synthesizeSpeech(request);
+        const audioContent = response.audioContent;
+        res.json({ audioContent: audioContent });
     } catch (error) {
         console.error(error.message);
         console.error(error.stack);
