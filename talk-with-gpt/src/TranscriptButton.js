@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Button } from '@mui/material';
 import { transcriptButtonStyles } from './styles';
 import TranscribeIcon from '@mui/icons-material/Transcribe';
 
 export default function TranscriptButton({ audioUrl, setTranscriptedText, setIsTranscribing }) {
-    const handleClick = async () => {
+    const handleClick = useCallback(async () => {
         setIsTranscribing(true);
         try {
             const response = await fetch(audioUrl);
@@ -28,7 +28,7 @@ export default function TranscriptButton({ audioUrl, setTranscriptedText, setIsT
         } catch (error) {
             console.error('Error transcribing audio:', error);
         }
-    };
+    }, [audioUrl, setTranscriptedText, setIsTranscribing]);
 
     return (
         <Button

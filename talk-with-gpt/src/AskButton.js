@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Button } from '@mui/material';
 import { askButtonStyles } from './styles';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 
 export default function AskButton({ transcriptedText, setAnswer, setIsAsking }) {
-    const handleClick = async () => {
+    const handleClick = useCallback(async () => {
         setIsAsking(true);
 
         try {
@@ -26,7 +26,7 @@ export default function AskButton({ transcriptedText, setAnswer, setIsAsking }) 
         } catch (error) {
             console.error('Error getting answer:', error);
         }
-    };
+    }, [transcriptedText, setAnswer, setIsAsking]);
 
     return (
         <Button
