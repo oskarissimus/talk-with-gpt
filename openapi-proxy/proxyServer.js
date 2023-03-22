@@ -76,11 +76,12 @@ app.post('/answer', async (req, res) => {
 });
 
 app.post('/text-to-speech', async (req, res) => {
+    // use voice pl-PL-Wavenet-A
     try {
         const { text } = req.body;
         const request = {
             input: { text: text },
-            voice: { languageCode: 'pl-PL', ssmlGender: 'NEUTRAL' },
+            voice: { languageCode: 'pl-PL', name: 'pl-PL-Wavenet-B' },
             audioConfig: { audioEncoding: 'MP3' },
         };
 

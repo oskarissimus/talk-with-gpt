@@ -1,31 +1,13 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { Button } from "@mui/material";
 import RecordVoiceOverIcon from "@mui/icons-material/RecordVoiceOver";
+import { useHandleSayAnswerButtonClick } from "./presenter";
 
-const dataToBase64 = (dataArray) =>
-    btoa(String.fromCharCode.apply(null, dataArray));
 
-const fetchAndPlayAudio = async (answer) => {
-    const response = await fetch("http://localhost:5000/text-to-speech", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ text: answer }),
-    });
 
-    const data = await response.json();
-    const base64Data = dataToBase64(data.audioContent.data);
-
-    const audio = new Audio();
-    audio.src = `data:audio/mp3;base64,${base64Data}`;
-    audio.play();
-};
 
 const SayAnswerButton = ({ answer }) => {
-    const handleClick = useCallback(() => {
-        fetchAndPlayAudio(answer);
-    }, [answer]);
+    const handleClick = useHandleSayAnswerButtonClick(answer);
 
     return (
         <Button
