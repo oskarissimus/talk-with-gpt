@@ -1,12 +1,11 @@
-import React from "react";
+import React, { useCallback } from "react";
 import RecordVoiceOverIcon from "@mui/icons-material/RecordVoiceOver";
 import { Button } from "@mui/material";
 
-function dataToBase64(dataArray) {
-    return btoa(String.fromCharCode.apply(null, dataArray));
-}
+const dataToBase64 = (dataArray) =>
+    btoa(String.fromCharCode.apply(null, dataArray));
 
-async function fetchAndPlayAudio(answer) {
+const fetchAndPlayAudio = async (answer) => {
     const response = await fetch("http://localhost:5000/text-to-speech", {
         method: "POST",
         headers: {
@@ -21,12 +20,12 @@ async function fetchAndPlayAudio(answer) {
     const audio = new Audio();
     audio.src = `data:audio/mp3;base64,${base64Data}`;
     audio.play();
-}
+};
 
-export default function SayAnswerButton({ answer }) {
-    const handleClick = () => {
+const SayAnswerButton = ({ answer }) => {
+    const handleClick = useCallback(() => {
         fetchAndPlayAudio(answer);
-    };
+    }, [answer]);
 
     return (
         <Button
@@ -38,4 +37,6 @@ export default function SayAnswerButton({ answer }) {
             Say answer
         </Button>
     );
-}
+};
+
+export default React.memo(SayAnswerButton);
