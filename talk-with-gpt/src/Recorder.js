@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import MicButton from './MicButton';
-import TranscriptButton from './TranscriptButton';
-import PlayButton from './PlayButton';
 import useAudioRecorder from './useAudioRecorder';
-import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import AskButton from './AskButton';
-import LinearProgress from '@mui/material/LinearProgress';
-import SayAnswerButton from './SayAnswerButton';
+import { getTranscript } from './api/transcript';
+import { getAnswer } from './api/answer';
+import { say } from './api/textToSpeech';
+import StatusInfo from './StatusInfo';
+
+
 
 export default function Recorder() {
     const { isRecording, toggleRecording, audioUrl } = useAudioRecorder();
@@ -16,52 +17,59 @@ export default function Recorder() {
     const [isTranscribing, setIsTranscribing] = React.useState(false);
     const [isAsking, setIsAsking] = React.useState(false);
 
-    return (
-        <Grid
-            container
-            spacing={2}
-            justifyContent="space-around"
-        >
-            <Grid item xs={6}>
-                <MicButton isRecording={isRecording} toggleRecording={toggleRecording} />
-            </Grid>
-            <Grid item xs={6}>
-                <PlayButton audioUrl={audioUrl} />
-            </Grid>
-            <Grid item xs={2}>
-                <TranscriptButton audioUrl={audioUrl} setTranscriptedText={setTranscriptedText} setIsTranscribing={setIsTranscribing} />
-            </Grid>
-            <Grid item xs={10}>
-                <TextField
-                    multiline
-                    rows={4}
-                    value={transcriptedText}
-                    label="Transcripted Text"
-                    variant="outlined"
-                    fullWidth
-                />
-                {isTranscribing && <LinearProgress />}
-            </Grid>
-            <Grid item xs={2}>
-                <AskButton transcriptedText={transcriptedText} setAnswer={setAnswer} setIsAsking={setIsAsking} />
-            </Grid>
-            <Grid item xs={8}>
-                <TextField
-                    multiline
-                    rows={4}
-                    value={answer}
-                    label="Answer"
-                    variant="outlined"
-                    fullWidth
-                />
-                {isAsking && <LinearProgress />}
-            </Grid>
-            <Grid item xs={2}>
-                <SayAnswerButton answer={answer} />
-            </Grid>
+    const handleTranscriptionAndAnswer = async (audioUrl) => {
+        setIsTranscribing(true);
+        const transcript = await getTranscript(audioUrl);
+        setTranscriptedText(transcript);
+        setIsTranscribing(false);
 
-        </Grid >
+        setIsAsking(true);
+        const answer = await getAnswer(transcript);
+        setAnswer(answer);
+        setIsAsking(false);
+        say(answer);
+    };
+
+    useEffect(() => {
+        if (audioUrl) {
+            handleTranscriptionAndAnswer(audioUrl);
+        }
+    }, [audioUrl]);
+
+
+    return (
+        <Stack
+            spacing={2}
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '100%',
+            }}
+        >
+            <MicButton isRecording={isRecording} toggleRecording={toggleRecording} />
+            <StatusInfo
+                isTranscribing={isTranscribing}
+                isAsking={isAsking}
+            />
+            <TextField
+                label="Transcripted Text"
+                multiline
+                rows={4}
+                value={transcriptedText}
+                variant="outlined"
+                fullWidth
+            />
+            <TextField
+                label="Answer"
+                multiline
+                rows={4}
+                value={answer}
+                variant="outlined"
+                fullWidth
+            />
+        </Stack >
 
     );
 }
-
