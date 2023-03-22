@@ -1,8 +1,8 @@
 import React from 'react';
+import { Button } from '@mui/material';
+import { micButtonStyles } from './styles';
 import MicIcon from '@mui/icons-material/Mic';
 import StopIcon from '@mui/icons-material/Stop';
-import Button from '@mui/material/Button';
-import { micButtonStyles } from './styles';
 
 export default function MicButton({ isRecording, toggleRecording }) {
     return (

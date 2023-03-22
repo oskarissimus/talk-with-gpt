@@ -1,8 +1,7 @@
 import React from 'react';
-import TranscribeIcon from '@mui/icons-material/Transcribe';
-import Button from '@mui/material/Button';
-import LinearProgress from '@mui/material/LinearProgress';
+import { Button } from '@mui/material';
 import { transcriptButtonStyles } from './styles';
+import TranscribeIcon from '@mui/icons-material/Transcribe';
 
 export default function TranscriptButton({ audioUrl, setTranscriptedText, setIsTranscribing }) {
     const handleClick = async () => {

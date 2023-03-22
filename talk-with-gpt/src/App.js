@@ -5,7 +5,6 @@ import { Stack } from '@mui/system';
 import Recorder from './Recorder';
 
 export default function App() {
-  // there is centered Box styled with sx with a p tag and a MicIcon
   return (
     <Box
       sx={{
@@ -30,7 +29,6 @@ export default function App() {
         </Typography>
         <Recorder />
       </Stack>
-
-    </Box >
+    </Box>
   );
 }

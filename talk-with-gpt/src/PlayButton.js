@@ -1,7 +1,7 @@
 import React from 'react';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import Button from '@mui/material/Button';
+import { Button } from '@mui/material';
 import { playButtonStyles } from './styles';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 export default function PlayButton({ audioUrl }) {
     const handleClick = () => {

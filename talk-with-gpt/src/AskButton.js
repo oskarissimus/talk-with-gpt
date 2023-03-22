@@ -1,15 +1,13 @@
 import React from 'react';
-import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
-import Button from '@mui/material/Button';
+import { Button } from '@mui/material';
 import { askButtonStyles } from './styles';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 
 export default function AskButton({ transcriptedText, setAnswer, setIsAsking }) {
     const handleClick = async () => {
-        console.log('asking question: ', transcriptedText);
         setIsAsking(true);
 
         try {
-            console.log('asking question: ', transcriptedText);
             const response = await fetch('/answer', {
                 method: 'POST',
                 headers: {
@@ -20,7 +18,6 @@ export default function AskButton({ transcriptedText, setAnswer, setIsAsking }) 
 
             if (response.ok) {
                 const data = await response.json();
-                console.log('answer:', data);
                 setAnswer(data);
                 setIsAsking(false);
             } else {
